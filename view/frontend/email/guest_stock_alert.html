@@ -1,0 +1,11 @@
+<!--@subject {{trans "Back in stock"}} @-->
+<!--@vars {
+"var productsHtml|raw":"Product List"
+} @-->
+{{template config_path="design/email/header_template"}}
+
+<p>{{trans "Good news - what you were waiting for is available again:"}}</p>
+
+<table>{{var productsHtml|raw}}</table>
+
+{{template config_path="design/email/footer_template"}}

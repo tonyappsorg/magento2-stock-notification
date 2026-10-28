@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Email:etc/email_templates.xsd">
+    <template id="tonyapps_stocknotification_guest_stock" label="Guest Back In Stock Alert" file="guest_stock_alert.html" type="html" module="Tonyapps_StockNotification" area="frontend"/>
+    <template id="tonyapps_stocknotification_guest_price" label="Guest Price Drop Alert" file="guest_price_alert.html" type="html" module="Tonyapps_StockNotification" area="frontend"/>
+    <template id="tonyapps_stocknotification_admin_subscription" label="Admin: New Alert Subscription" file="new_subscription.html" type="html" module="Tonyapps_StockNotification" area="frontend"/>
+    <template id="tonyapps_stocknotification_admin_low_stock" label="Admin: Low Stock Digest" file="low_stock.html" type="html" module="Tonyapps_StockNotification" area="frontend"/>
+    <template id="tonyapps_stocknotification_guest_confirm" label="Guest Alert Confirmation" file="guest_confirm.html" type="html" module="Tonyapps_StockNotification" area="frontend"/>
+</config>

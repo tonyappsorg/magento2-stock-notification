@@ -1,0 +1,12 @@
+<!--@subject {{trans "Confirm your alert for %name" name=$product_name}} @-->
+<!--@vars {
+"var product_name":"Product Name",
+"var confirm_url":"Confirmation URL"
+} @-->
+{{template config_path="design/email/header_template"}}
+
+<p>{{trans "Someone, hopefully you, asked us to email this address about %name." name=$product_name}}</p>
+<p><a href="{{var confirm_url}}">{{trans "Confirm the alert"}}</a></p>
+<p><small>{{trans "If it wasn't you, ignore this email and you won't hear from us again."}}</small></p>
+
+{{template config_path="design/email/footer_template"}}

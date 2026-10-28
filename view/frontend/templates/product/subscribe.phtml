@@ -1,0 +1,107 @@
+<?php
+/** @var \Tonyapps\StockNotification\Block\Product\Subscribe $block */
+/** @var \Magento\Framework\Escaper $escaper */
+
+$types = [];
+if ($block->isStockAlertVisible()) {
+    $types[$block->getStockType()] = __('Notify me when this product is back in stock');
+}
+if ($block->isPriceAlertVisible()) {
+    $types[$block->getPriceType()] = __('Notify me when the price drops');
+}
+if (!$types) {
+    return;
+}
+$product = $block->getProduct();
+$guest = $block->useGuestForm();
+?>
+<div class="product alert stocknotification" data-tonyapps-alert-widget>
+    <?php foreach ($types as $type => $label) : ?>
+        <?php if (!$guest) : ?>
+            <a href="<?= $escaper->escapeUrl($block->getCoreSignupUrl($type)) ?>" class="action alert <?= $escaper->escapeHtmlAttr($type) ?>">
+                <?= $escaper->escapeHtml($label) ?>
+            </a>
+        <?php else : ?>
+            <a href="#" class="action alert <?= $escaper->escapeHtmlAttr($type) ?>" data-alert-trigger="<?= $escaper->escapeHtmlAttr($type) ?>">
+                <?= $escaper->escapeHtml($label) ?>
+            </a>
+            <div class="tonyapps-alert-form" data-alert-form="<?= $escaper->escapeHtmlAttr($type) ?>"
+                 data-alert-title="<?= $escaper->escapeHtmlAttr($label) ?>" style="display:none">
+                <form data-alert-type="<?= $escaper->escapeHtmlAttr($type) ?>">
+                    <label for="tonyapps-alert-email-<?= $escaper->escapeHtmlAttr($type) ?>">
+                        <?= $escaper->escapeHtml(__('Email address')) ?>
+                    </label>
+                    <input type="email" required
+                           id="tonyapps-alert-email-<?= $escaper->escapeHtmlAttr($type) ?>"
+                           name="email" class="input-text"
+                           placeholder="<?= $escaper->escapeHtmlAttr(__('you@example.com')) ?>"/>
+                    <button type="submit" class="action primary">
+                        <span><?= $escaper->escapeHtml(__('Notify me')) ?></span>
+                    </button>
+                </form>
+                <div class="message" data-alert-message style="display:none"></div>
+            </div>
+        <?php endif; ?>
+    <?php endforeach; ?>
+</div>
+
+<?php if ($guest) : ?>
+<script>
+require(['jquery', 'Magento_Ui/js/modal/modal', 'mage/cookies'], function ($, modal) {
+    'use strict';
+
+    var config = {
+        url: '<?= $escaper->escapeJs($block->getGuestSubscribeUrl()) ?>',
+        productId: <?= (int) $product->getId() ?>,
+        popup: <?= $block->isPopup() ? 'true' : 'false' ?>
+    };
+
+    $('[data-tonyapps-alert-widget]').each(function () {
+        var widget = $(this);
+
+        widget.find('[data-alert-form]').each(function () {
+            var form = $(this),
+                type = form.data('alert-form');
+
+            if (config.popup) {
+                modal({
+                    type: 'popup',
+                    modalClass: 'tonyapps-alert-modal',
+                    title: form.data('alert-title'),
+                    buttons: []
+                }, form);
+            }
+
+            widget.on('click', '[data-alert-trigger="' + type + '"]', function (event) {
+                event.preventDefault();
+                config.popup ? form.modal('openModal') : form.show();
+            });
+
+            form.on('submit', 'form', function (event) {
+                event.preventDefault();
+                var message = form.find('[data-alert-message]');
+
+                $.post(config.url, {
+                    form_key: $.mage.cookies.get('form_key'),
+                    product_id: config.productId,
+                    alert_type: type,
+                    email: form.find('input[name="email"]').val()
+                }).done(function (response) {
+                    message.text(response.message)
+                        .removeClass('error success')
+                        .addClass(response.success ? 'success' : 'error')
+                        .show();
+
+                    if (response.success) {
+                        form.find('form').hide();
+                    }
+                }).fail(function () {
+                    message.text('<?= $escaper->escapeJs(__('Something went wrong. Please try again.')) ?>')
+                        .addClass('error').show();
+                });
+            });
+        });
+    });
+});
+</script>
+<?php endif; ?>

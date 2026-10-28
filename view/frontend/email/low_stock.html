@@ -1,0 +1,15 @@
+<!--@subject {{trans "%count products are running low" count=$rowCount}} @-->
+<!--@vars {
+"var rowsHtml|raw":"Low Stock Rows",
+"var rowCount":"Number of Products"
+} @-->
+{{template config_path="design/email/header_template"}}
+
+<p>{{trans "%count products are at or below their notify quantity:" count=$rowCount}}</p>
+
+<table border="0" cellpadding="6">
+    <tr><th align="left">SKU</th><th align="left">{{trans "Product"}}</th><th align="right">{{trans "Qty"}}</th><th align="left">{{trans "Source"}}</th></tr>
+    {{var rowsHtml|raw}}
+</table>
+
+{{template config_path="design/email/footer_template"}}

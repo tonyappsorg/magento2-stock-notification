@@ -1,0 +1,11 @@
+<!--@subject {{trans "Price drop alert"}} @-->
+<!--@vars {
+"var productsHtml|raw":"Product List"
+} @-->
+{{template config_path="design/email/header_template"}}
+
+<p>{{trans "The price dropped on something you are watching:"}}</p>
+
+<table>{{var productsHtml|raw}}</table>
+
+{{template config_path="design/email/footer_template"}}

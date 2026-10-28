@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<!--
+    Core's alert links send guests to the login page. We swap both blocks for one that can also
+    take an email address; logged-in customers still post to core's productalert/add/* controllers.
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceBlock name="productalert.stock" remove="true"/>
+        <referenceBlock name="productalert.price" remove="true"/>
+        <referenceContainer name="alert.urls">
+            <block class="Tonyapps\StockNotification\Block\Product\Subscribe"
+                   name="tonyapps.stocknotification.subscribe"
+                   template="Tonyapps_StockNotification::product/subscribe.phtml"/>
+        </referenceContainer>
+    </body>
+</page>

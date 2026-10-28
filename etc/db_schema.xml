@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <!-- Guests only. Logged-in customers keep using core product_alert_stock / product_alert_price. -->
+    <table name="tonyapps_stocknotification_guest" resource="default" engine="innodb" comment="Guest Stock/Price Alert">
+        <column xsi:type="int" name="entity_id" padding="10" unsigned="true" nullable="false" identity="true" comment="Entity ID"/>
+        <column xsi:type="varchar" name="email" length="255" nullable="false" comment="Subscriber Email"/>
+        <column xsi:type="int" name="product_id" padding="10" unsigned="true" nullable="false" comment="Product ID"/>
+        <column xsi:type="smallint" name="store_id" padding="5" unsigned="true" nullable="false" default="0" comment="Store ID"/>
+        <column xsi:type="smallint" name="website_id" padding="5" unsigned="true" nullable="false" default="0" comment="Website ID"/>
+        <column xsi:type="varchar" name="alert_type" length="8" nullable="false" comment="stock or price"/>
+        <column xsi:type="decimal" name="price" scale="6" precision="20" nullable="true" comment="Price at subscribe time"/>
+        <column xsi:type="smallint" name="status" unsigned="true" nullable="false" default="0" comment="0 pending, 1 notified, 2 unconfirmed"/>
+        <column xsi:type="varchar" name="unsubscribe_token" length="64" nullable="false" comment="Unsubscribe Token"/>
+        <column xsi:type="timestamp" name="add_date" on_update="false" nullable="false" default="CURRENT_TIMESTAMP" comment="Added At"/>
+        <column xsi:type="timestamp" name="send_date" on_update="false" nullable="true" comment="Last Sent At"/>
+        <column xsi:type="smallint" name="send_count" unsigned="true" nullable="false" default="0" comment="Send Count"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="entity_id"/>
+        </constraint>
+        <constraint xsi:type="foreign" referenceId="TONYAPPS_STOCKNOTIFICATION_GUEST_PRODUCT_ID_CATALOG_PRODUCT_ENTITY_ENTITY_ID"
+                    table="tonyapps_stocknotification_guest" column="product_id"
+                    referenceTable="catalog_product_entity" referenceColumn="entity_id" onDelete="CASCADE"/>
+        <constraint xsi:type="unique" referenceId="TONYAPPS_STOCKNOTIFICATION_GUEST_EMAIL_PRODUCT_ID_STORE_ID_ALERT_TYPE">
+            <column name="email"/>
+            <column name="product_id"/>
+            <column name="store_id"/>
+            <column name="alert_type"/>
+        </constraint>
+        <constraint xsi:type="unique" referenceId="TONYAPPS_STOCKNOTIFICATION_GUEST_UNSUBSCRIBE_TOKEN">
+            <column name="unsubscribe_token"/>
+        </constraint>
+        <index referenceId="TONYAPPS_STOCKNOTIFICATION_GUEST_STATUS" indexType="btree">
+            <column name="status"/>
+        </index>
+        <index referenceId="TONYAPPS_STOCKNOTIFICATION_GUEST_PRODUCT_ID" indexType="btree">
+            <column name="product_id"/>
+        </index>
+    </table>
+</schema>

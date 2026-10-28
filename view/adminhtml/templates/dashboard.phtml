@@ -1,0 +1,80 @@
+<?php
+/** @var \Tonyapps\StockNotification\Block\Adminhtml\Dashboard $block */
+/** @var \Magento\Framework\Escaper $escaper */
+
+$totals = $block->getTotals();
+// Pairs, not label => value: __() returns a Phrase object, which can't be an array key.
+$tiles = [
+    [__('Customer stock alerts'), $totals['customer_stock']],
+    [__('Customer price alerts'), $totals['customer_price']],
+    [__('Guests waiting'), $totals['guest_pending']],
+    [__('Guests notified'), $totals['guest_notified']],
+    [__('Alerts sent'), $totals['alerts_sent']],
+];
+?>
+<div class="tonyapps-stocknotification-dashboard">
+    <div class="dashboard-totals" style="display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:2rem">
+        <?php foreach ($tiles as [$label, $value]) : ?>
+            <div style="flex:1 1 150px;border:1px solid #d6d6d6;border-radius:3px;padding:1rem;background:#fff">
+                <div style="font-size:2rem;line-height:1.2"><?= (int) $value ?></div>
+                <div><?= $escaper->escapeHtml($label) ?></div>
+            </div>
+        <?php endforeach; ?>
+    </div>
+
+    <h2><?= $escaper->escapeHtml(__('Most Wanted Products')) ?></h2>
+    <p><?= $escaper->escapeHtml(__('Ranked by how many shoppers are waiting. This is your refill shortlist.')) ?></p>
+    <table class="data-grid">
+        <thead>
+            <tr>
+                <th class="data-grid-th"><?= $escaper->escapeHtml(__('SKU')) ?></th>
+                <th class="data-grid-th"><?= $escaper->escapeHtml(__('Product')) ?></th>
+                <th class="data-grid-th"><?= $escaper->escapeHtml(__('Subscribers')) ?></th>
+                <th class="data-grid-th"><?= $escaper->escapeHtml(__('Guests')) ?></th>
+                <th class="data-grid-th"><?= $escaper->escapeHtml(__('Alerts Sent')) ?></th>
+            </tr>
+        </thead>
+        <tbody>
+        <?php foreach ($block->getTopProducts() as $row) : ?>
+            <tr>
+                <td><?= $escaper->escapeHtml($row['sku']) ?></td>
+                <td>
+                    <a href="<?= $escaper->escapeUrl($block->getProductEditUrl($row['product_id'])) ?>">
+                        <?= $escaper->escapeHtml($row['name']) ?>
+                    </a>
+                </td>
+                <td><?= (int) $row['subscribers'] ?></td>
+                <td><?= (int) $row['guests'] ?></td>
+                <td><?= (int) $row['alerts_sent'] ?></td>
+            </tr>
+        <?php endforeach; ?>
+        <?php if (!$block->getTopProducts()) : ?>
+            <tr><td colspan="5"><?= $escaper->escapeHtml(__('No subscriptions yet.')) ?></td></tr>
+        <?php endif; ?>
+        </tbody>
+    </table>
+
+    <h2 style="margin-top:2rem"><?= $escaper->escapeHtml(__('Latest Guest Subscriptions')) ?></h2>
+    <table class="data-grid">
+        <thead>
+            <tr>
+                <th class="data-grid-th"><?= $escaper->escapeHtml(__('Email')) ?></th>
+                <th class="data-grid-th"><?= $escaper->escapeHtml(__('Product ID')) ?></th>
+                <th class="data-grid-th"><?= $escaper->escapeHtml(__('Type')) ?></th>
+                <th class="data-grid-th"><?= $escaper->escapeHtml(__('Subscribed')) ?></th>
+                <th class="data-grid-th"><?= $escaper->escapeHtml(__('Status')) ?></th>
+            </tr>
+        </thead>
+        <tbody>
+        <?php foreach ($block->getRecentGuestSubscriptions() as $row) : ?>
+            <tr>
+                <td><?= $escaper->escapeHtml($row['email']) ?></td>
+                <td><?= (int) $row['product_id'] ?></td>
+                <td><?= $escaper->escapeHtml($row['alert_type']) ?></td>
+                <td><?= $escaper->escapeHtml($block->formatDate($row['add_date'], \IntlDateFormatter::MEDIUM, true)) ?></td>
+                <td><?= $escaper->escapeHtml([0 => __('Waiting'), 1 => __('Notified'), 2 => __('Unconfirmed')][(int) $row['status']] ?? '') ?></td>
+            </tr>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
+</div>

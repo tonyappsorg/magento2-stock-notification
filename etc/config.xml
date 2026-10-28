@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store/etc/config.xsd">
+    <default>
+        <tonyapps_stocknotification>
+            <general>
+                <enabled>1</enabled>
+                <guest_enabled>1</guest_enabled>
+                <popup_enabled>1</popup_enabled>
+            </general>
+            <admin>
+                <notify_new_subscription>0</notify_new_subscription>
+                <notify_low_stock>1</notify_low_stock>
+                <email_template>tonyapps_stocknotification_admin_subscription</email_template>
+            </admin>
+        </tonyapps_stocknotification>
+    </default>
+</config>

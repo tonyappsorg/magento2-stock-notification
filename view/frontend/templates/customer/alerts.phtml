@@ -1,0 +1,45 @@
+<?php
+/** @var \Tonyapps\StockNotification\Block\Customer\Alerts $block */
+/** @var \Magento\Framework\Escaper $escaper */
+
+$alerts = $block->getAlerts();
+?>
+<div class="block tonyapps-alerts">
+    <?php if (!$alerts) : ?>
+        <div class="message info empty">
+            <span><?= $escaper->escapeHtml(__('You have no product alerts yet.')) ?></span>
+        </div>
+    <?php else : ?>
+        <table class="data table">
+            <caption class="table-caption"><?= $escaper->escapeHtml(__('My Product Alerts')) ?></caption>
+            <thead>
+                <tr>
+                    <th scope="col" class="col name"><?= $escaper->escapeHtml(__('Product')) ?></th>
+                    <th scope="col" class="col type"><?= $escaper->escapeHtml(__('Alert')) ?></th>
+                    <th scope="col" class="col date"><?= $escaper->escapeHtml(__('Subscribed')) ?></th>
+                    <th scope="col" class="col actions">&nbsp;</th>
+                </tr>
+            </thead>
+            <tbody>
+            <?php foreach ($alerts as $alert) : ?>
+                <tr>
+                    <td class="col name" data-th="<?= $escaper->escapeHtmlAttr(__('Product')) ?>">
+                        <a href="<?= $escaper->escapeUrl($alert['url']) ?>"><?= $escaper->escapeHtml($alert['name']) ?></a>
+                    </td>
+                    <td class="col type" data-th="<?= $escaper->escapeHtmlAttr(__('Alert')) ?>">
+                        <?= $escaper->escapeHtml($alert['label']) ?>
+                    </td>
+                    <td class="col date" data-th="<?= $escaper->escapeHtmlAttr(__('Subscribed')) ?>">
+                        <?= $escaper->escapeHtml($block->formatDate($alert['add_date'])) ?>
+                    </td>
+                    <td class="col actions">
+                        <a href="#" class="action delete" data-post='<?= /* @noEscape */ $alert['unsubscribe'] ?>'>
+                            <?= $escaper->escapeHtml(__('Unsubscribe')) ?>
+                        </a>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+            </tbody>
+        </table>
+    <?php endif; ?>
+</div>

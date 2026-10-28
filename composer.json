@@ -1,0 +1,18 @@
+{
+    "name": "tonyapps/module-stock-notification",
+    "description": "Out of stock and price-drop notifications for customers and guests, admin alerts, subscription analytics.",
+    "type": "magento2-module",
+    "license": "proprietary",
+    "require": {
+        "php": "~8.3.0||~8.4.0",
+        "magento/framework": "*",
+        "magento/module-product-alert": "*"
+    },
+    "version": "1.0.0",
+    "autoload": {
+        "files": ["registration.php"],
+        "psr-4": {
+            "Tonyapps\\StockNotification\\": ""
+        }
+    }
+}

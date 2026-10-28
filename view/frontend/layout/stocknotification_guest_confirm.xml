@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <title>Confirm stock alert</title>
+        <meta name="robots" content="NOINDEX,NOFOLLOW"/>
+    </head>
+    <body>
+        <referenceContainer name="content">
+            <block class="Magento\Framework\View\Element\Template" name="tonyapps.stocknotification.guest.confirm"
+                   template="Tonyapps_StockNotification::guest/token_action.phtml" cacheable="false">
+                <arguments>
+                    <argument name="action_path" xsi:type="string">stocknotification/guest/confirm</argument>
+                    <argument name="question" xsi:type="string" translate="true">Start sending me this alert?</argument>
+                    <argument name="button" xsi:type="string" translate="true">Confirm your alert</argument>
+                </arguments>
+            </block>
+        </referenceContainer>
+    </body>
+</page>

@@ -1,0 +1,13 @@
+<!--@subject {{trans "New %alert_type alert subscription" alert_type=$alert_type}} @-->
+<!--@vars {
+"var subscriber_email":"Subscriber Email",
+"var product_name":"Product Name",
+"var alert_type":"Alert Type",
+"var subscriber_type":"Subscriber Type"
+} @-->
+{{template config_path="design/email/header_template"}}
+
+<p>{{trans "%who %email subscribed to a %type alert." who=$subscriber_type email=$subscriber_email type=$alert_type}}</p>
+<p>{{trans "Product: %name" name=$product_name}}</p>
+
+{{template config_path="design/email/footer_template"}}

@@ -1,0 +1,9 @@
+<?php
+/** @var \Magento\Framework\View\Element\Template $block */
+/** @var \Magento\Framework\Escaper $escaper */
+?>
+<form method="post" action="<?= $escaper->escapeUrl($block->getUrl($block->getData('action_path'))) ?>">
+    <input type="hidden" name="token" value="<?= $escaper->escapeHtmlAttr((string) $block->getRequest()->getParam('token')) ?>"/>
+    <p><?= $escaper->escapeHtml(__($block->getData('question'))) ?></p>
+    <button type="submit" class="action primary"><span><?= $escaper->escapeHtml(__($block->getData('button'))) ?></span></button>
+</form>

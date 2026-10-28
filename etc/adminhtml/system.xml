@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="tonyapps_stocknotification" translate="label" type="text" sortOrder="255" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Out of Stock Notification</label>
+            <tab>catalog</tab>
+            <resource>Tonyapps_StockNotification::config</resource>
+            <group id="general" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>General</label>
+                <comment><![CDATA[Stock and price alerts themselves are switched on under <b>Catalog &gt; Catalog &gt; Product Alerts</b>. This section only adds guest support and admin notifications on top.]]></comment>
+                <field id="enabled" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable Extension</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="guest_enabled" translate="label comment" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Allow Guest Subscriptions</label>
+                    <comment>Guests subscribe with an email address instead of being sent to the login page.</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <depends><field id="enabled">1</field></depends>
+                </field>
+                <field id="popup_enabled" translate="label comment" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Use Pop-up for Guests</label>
+                    <comment>No means the email field renders inline on the product page.</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <depends><field id="guest_enabled">1</field></depends>
+                </field>
+            </group>
+            <group id="admin" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Admin Notifications</label>
+                <field id="recipient_email" translate="label comment" type="text" sortOrder="10" showInDefault="1">
+                    <label>Recipient Email</label>
+                    <comment>Leave empty to use the General Contact address.</comment>
+                    <validate>validate-email</validate>
+                </field>
+                <field id="notify_new_subscription" translate="label comment" type="select" sortOrder="20" showInDefault="1">
+                    <label>Email on Every New Subscription</label>
+                    <comment>Noisy on busy stores - the analytics dashboard covers the same ground without the inbox traffic.</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="notify_low_stock" translate="label comment" type="select" sortOrder="30" showInDefault="1">
+                    <label>Daily Low Stock Digest</label>
+                    <comment>Uses the same thresholds as Reports &gt; Products &gt; Low Stock.</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>
