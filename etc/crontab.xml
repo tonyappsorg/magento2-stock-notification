@@ -2,7 +2,7 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Cron:etc/crontab.xsd">
     <group id="default">
         <!-- Core cron handles customer alerts; this one covers guests. -->
-        <job name="tonyapps_stocknotification_guest_alerts" instance="Tonyapps\StockNotification\Cron\SendGuestAlerts" method="execute">
+        <job name="tonyapps_stocknotification_guest_alerts" instance="Tonyapps\StockNotification\Model\GuestAlertSender" method="send">
             <schedule>*/15 * * * *</schedule>
         </job>
         <job name="tonyapps_stocknotification_low_stock" instance="Tonyapps\StockNotification\Cron\LowStockDigest" method="execute">
