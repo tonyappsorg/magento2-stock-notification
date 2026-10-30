@@ -10,7 +10,6 @@
             <admin>
                 <notify_new_subscription>0</notify_new_subscription>
                 <notify_low_stock>1</notify_low_stock>
-                <email_template>tonyapps_stocknotification_admin_subscription</email_template>
             </admin>
         </tonyapps_stocknotification>
     </default>

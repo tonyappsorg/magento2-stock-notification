@@ -4,10 +4,10 @@
 
 $types = [];
 if ($block->isStockAlertVisible()) {
-    $types[$block->getStockType()] = __('Notify me when this product is back in stock');
+    $types[\Tonyapps\StockNotification\Model\GuestAlert::TYPE_STOCK] = __('Notify me when this product is back in stock');
 }
 if ($block->isPriceAlertVisible()) {
-    $types[$block->getPriceType()] = __('Notify me when the price drops');
+    $types[\Tonyapps\StockNotification\Model\GuestAlert::TYPE_PRICE] = __('Notify me when the price drops');
 }
 if (!$types) {
     return;
@@ -51,7 +51,7 @@ require(['jquery', 'Magento_Ui/js/modal/modal', 'mage/cookies'], function ($, mo
     'use strict';
 
     var config = {
-        url: '<?= $escaper->escapeJs($block->getGuestSubscribeUrl()) ?>',
+        url: '<?= $escaper->escapeJs($block->getUrl('stocknotification/guest/subscribe')) ?>',
         productId: <?= (int) $product->getId() ?>,
         popup: <?= $block->isPopup() ? 'true' : 'false' ?>
     };

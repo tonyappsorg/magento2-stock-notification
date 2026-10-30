@@ -10,7 +10,6 @@ use Magento\Framework\View\Element\Template;
 use Magento\Framework\View\Element\Template\Context;
 use Magento\ProductAlert\Helper\Data as ProductAlertHelper;
 use Tonyapps\StockNotification\Helper\Data as Helper;
-use Tonyapps\StockNotification\Model\GuestAlert;
 
 /**
  * Replaces the core product-page alert links so guests get an email field instead of a login redirect.
@@ -49,17 +48,13 @@ class Subscribe extends Template
         return $product !== null && $product->isAvailable() && $this->productAlertHelper->isPriceAlertAllowed();
     }
 
-    public function isGuest(): bool
-    {
-        return !$this->customerSession->isLoggedIn();
-    }
-
     /**
      * Guests fall back to the core login-gated link when guest subscriptions are switched off.
      */
     public function useGuestForm(): bool
     {
-        return $this->isGuest() && $this->helper->isGuestSubscriptionAllowed((int) $this->_storeManager->getStore()->getId());
+        return !$this->customerSession->isLoggedIn()
+            && $this->helper->isGuestSubscriptionAllowed((int) $this->_storeManager->getStore()->getId());
     }
 
     public function isPopup(): bool
@@ -75,18 +70,4 @@ class Subscribe extends Template
         return $this->productAlertHelper->getSaveUrl($type);
     }
 
-    public function getGuestSubscribeUrl(): string
-    {
-        return $this->getUrl('stocknotification/guest/subscribe');
-    }
-
-    public function getStockType(): string
-    {
-        return GuestAlert::TYPE_STOCK;
-    }
-
-    public function getPriceType(): string
-    {
-        return GuestAlert::TYPE_PRICE;
-    }
 }

@@ -1,8 +1,9 @@
 <?php
-/** @var \Tonyapps\StockNotification\Block\Adminhtml\Dashboard $block */
+/** @var \Magento\Backend\Block\Template $block */
 /** @var \Magento\Framework\Escaper $escaper */
 
-$totals = $block->getTotals();
+$analytics = $block->getData('view_model');
+$totals = $analytics->getTotals();
 // Pairs, not label => value: __() returns a Phrase object, which can't be an array key.
 $tiles = [
     [__('Customer stock alerts'), $totals['customer_stock']],
@@ -35,11 +36,11 @@ $tiles = [
             </tr>
         </thead>
         <tbody>
-        <?php foreach ($block->getTopProducts() as $row) : ?>
+        <?php foreach ($analytics->getTopProducts() as $row) : ?>
             <tr>
                 <td><?= $escaper->escapeHtml($row['sku']) ?></td>
                 <td>
-                    <a href="<?= $escaper->escapeUrl($block->getProductEditUrl($row['product_id'])) ?>">
+                    <a href="<?= $escaper->escapeUrl($block->getUrl('catalog/product/edit', ['id' => $row['product_id']])) ?>">
                         <?= $escaper->escapeHtml($row['name']) ?>
                     </a>
                 </td>
@@ -66,7 +67,7 @@ $tiles = [
             </tr>
         </thead>
         <tbody>
-        <?php foreach ($block->getRecentGuestSubscriptions() as $row) : ?>
+        <?php foreach ($analytics->getRecentGuestSubscriptions() as $row) : ?>
             <tr>
                 <td><?= $escaper->escapeHtml($row['email']) ?></td>
                 <td><?= (int) $row['product_id'] ?></td>
