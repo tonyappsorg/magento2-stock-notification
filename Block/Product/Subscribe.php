@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Tonyapps\StockNotification\Block\Product;
 
 use Magento\Catalog\Model\Product;
-use Magento\Customer\Model\Session as CustomerSession;
 use Magento\Framework\Registry;
 use Magento\Framework\View\Element\Template;
 use Magento\Framework\View\Element\Template\Context;
@@ -20,7 +19,6 @@ class Subscribe extends Template
         Context $context,
         private readonly Registry $registry,
         private readonly ProductAlertHelper $productAlertHelper,
-        private readonly CustomerSession $customerSession,
         private readonly Helper $helper,
         array $data = []
     ) {
@@ -49,12 +47,13 @@ class Subscribe extends Template
     }
 
     /**
+     * Whether to render the guest email form next to the core links. The product page is full-page cached, so the
+     * session can't tell guests from customers here; the template picks one client side from customer-data.
      * Guests fall back to the core login-gated link when guest subscriptions are switched off.
      */
-    public function useGuestForm(): bool
+    public function isGuestFormAllowed(): bool
     {
-        return !$this->customerSession->isLoggedIn()
-            && $this->helper->isGuestSubscriptionAllowed((int) $this->_storeManager->getStore()->getId());
+        return $this->helper->isGuestSubscriptionAllowed((int) $this->_storeManager->getStore()->getId());
     }
 
     public function isPopup(): bool

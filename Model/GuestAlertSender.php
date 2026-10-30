@@ -197,7 +197,8 @@ class GuestAlertSender
             $this->escaper->escapeUrl($product->getProductUrl()),
             $this->escaper->escapeHtml($product->getName()),
             $this->escaper->escapeHtml(
-                $this->priceCurrency->format((float) $product->getFinalPrice(), false, 2, $storeId)
+                // Final price is in base currency; the shopper reads the store's display currency.
+                $this->priceCurrency->convertAndFormat((float) $product->getFinalPrice(), false, 2, $storeId)
             ),
             $this->escaper->escapeUrl($unsubscribeUrl),
             $this->escaper->escapeHtml(__('Stop alerts for this product'))

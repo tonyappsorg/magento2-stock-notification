@@ -1,0 +1,28 @@
+{
+    "tonyapps_stocknotification_guest": {
+        "column": {
+            "entity_id": true,
+            "email": true,
+            "product_id": true,
+            "store_id": true,
+            "website_id": true,
+            "alert_type": true,
+            "price": true,
+            "status": true,
+            "unsubscribe_token": true,
+            "add_date": true,
+            "send_date": true,
+            "send_count": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "TONYAPPS_STOCKNOTIFICATION_GUEST_PRODUCT_ID_CATALOG_PRODUCT_ENTITY_ENTITY_ID": true,
+            "TONYAPPS_STOCKNOTIFICATION_GUEST_EMAIL_PRODUCT_ID_STORE_ID_ALERT_TYPE": true,
+            "TONYAPPS_STOCKNOTIFICATION_GUEST_UNSUBSCRIBE_TOKEN": true
+        },
+        "index": {
+            "TONYAPPS_STOCKNOTIFICATION_GUEST_STATUS": true,
+            "TONYAPPS_STOCKNOTIFICATION_GUEST_PRODUCT_ID": true
+        }
+    }
+}

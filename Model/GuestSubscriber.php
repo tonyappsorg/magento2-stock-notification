@@ -15,6 +15,8 @@ class GuestSubscriber
 {
     // Caps confirmation emails a stranger can trigger to one address by typing it into product pages.
     private const MAX_UNCONFIRMED_PER_EMAIL = 5;
+    // Re-subscribing an unconfirmed alert resends its confirmation email at most this often.
+    private const CONFIRMATION_RESEND_SECONDS = 3600;
 
     public function __construct(
         private readonly GuestAlertFactory $alertFactory,
@@ -27,8 +29,9 @@ class GuestSubscriber
     /**
      * Subscribe a guest, or re-arm an existing subscription for the same email/product/store/type.
      *
-     * A new subscription starts unconfirmed; isObjectNew() on the result tells the caller to email the confirmation
-     * link. An address that already confirmed this alert once is re-armed straight away.
+     * A new subscription starts unconfirmed. The result's 'confirmation_due' flag tells the caller to email the
+     * confirmation link: always for a new alert, and again for a still-unconfirmed one at most once an hour (the lost
+     * email case). An address that already confirmed this alert once is re-armed straight away.
      *
      * @throws LocalizedException
      */
@@ -53,6 +56,15 @@ class GuestSubscriber
 
         $alert = $this->findExisting($email, $productId, $alertType, $storeId);
         $isNew = $alert === null;
+        $isUnconfirmed = $isNew || (int) $alert->getStatus() === GuestAlert::STATUS_UNCONFIRMED;
+        $confirmationDue = $isNew;
+        if (!$isNew && $isUnconfirmed
+            && strtotime((string) $alert->getData('add_date') . ' UTC') < time() - self::CONFIRMATION_RESEND_SECONDS
+        ) {
+            // add_date doubles as "confirmation last sent", which also restarts the 7-day purge clock.
+            $alert->setData('add_date', gmdate('Y-m-d H:i:s'));
+            $confirmationDue = true;
+        }
         if ($isNew) {
             if ($this->countUnconfirmed($email) >= self::MAX_UNCONFIRMED_PER_EMAIL) {
                 throw new LocalizedException(__('Please confirm the alerts we already emailed you first.'));
@@ -67,12 +79,11 @@ class GuestSubscriber
             'website_id' => $websiteId,
             'alert_type' => $alertType,
             'price' => $price,
-            'status' => $isNew || (int) $alert->getStatus() === GuestAlert::STATUS_UNCONFIRMED
-                ? GuestAlert::STATUS_UNCONFIRMED
-                : GuestAlert::STATUS_PENDING,
+            'status' => $isUnconfirmed ? GuestAlert::STATUS_UNCONFIRMED : GuestAlert::STATUS_PENDING,
         ]);
         $this->alertResource->save($alert);
         $alert->isObjectNew($isNew);
+        $alert->setData('confirmation_due', $confirmationDue);
 
         return $alert;
     }

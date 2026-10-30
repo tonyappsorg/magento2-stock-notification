@@ -13,16 +13,18 @@ if (!$types) {
     return;
 }
 $product = $block->getProduct();
-$guest = $block->useGuestForm();
+// The page is full-page cached: both variants are rendered and customer-data picks one in the browser.
+$guest = $block->isGuestFormAllowed();
 ?>
 <div class="product alert stocknotification" data-tonyapps-alert-widget>
     <?php foreach ($types as $type => $label) : ?>
-        <?php if (!$guest) : ?>
-            <a href="<?= $escaper->escapeUrl($block->getCoreSignupUrl($type)) ?>" class="action alert <?= $escaper->escapeHtmlAttr($type) ?>">
-                <?= $escaper->escapeHtml($label) ?>
-            </a>
-        <?php else : ?>
-            <a href="#" class="action alert <?= $escaper->escapeHtmlAttr($type) ?>" data-alert-trigger="<?= $escaper->escapeHtmlAttr($type) ?>">
+        <a href="<?= $escaper->escapeUrl($block->getCoreSignupUrl($type)) ?>" class="action alert <?= $escaper->escapeHtmlAttr($type) ?>"
+           data-alert-customer>
+            <?= $escaper->escapeHtml($label) ?>
+        </a>
+        <?php if ($guest) : ?>
+            <a href="#" class="action alert <?= $escaper->escapeHtmlAttr($type) ?>" data-alert-trigger="<?= $escaper->escapeHtmlAttr($type) ?>"
+               style="display:none">
                 <?= $escaper->escapeHtml($label) ?>
             </a>
             <div class="tonyapps-alert-form" data-alert-form="<?= $escaper->escapeHtmlAttr($type) ?>"
@@ -47,7 +49,7 @@ $guest = $block->useGuestForm();
 
 <?php if ($guest) : ?>
 <script>
-require(['jquery', 'Magento_Ui/js/modal/modal', 'mage/cookies'], function ($, modal) {
+require(['jquery', 'Magento_Ui/js/modal/modal', 'Magento_Customer/js/customer-data', 'mage/cookies'], function ($, modal, customerData) {
     'use strict';
 
     var config = {
@@ -55,6 +57,18 @@ require(['jquery', 'Magento_Ui/js/modal/modal', 'mage/cookies'], function ($, mo
         productId: <?= (int) $product->getId() ?>,
         popup: <?= $block->isPopup() ? 'true' : 'false' ?>
     };
+
+    var customer = customerData.get('customer'),
+        toggle = function (data) {
+            // Logged-in customers keep core's alert links (product_alert_* tables); guests get the email form.
+            var loggedIn = !!(data && data.firstname);
+
+            $('[data-tonyapps-alert-widget] [data-alert-customer]').toggle(loggedIn);
+            $('[data-tonyapps-alert-widget] [data-alert-trigger]').toggle(!loggedIn);
+        };
+
+    toggle(customer());
+    customer.subscribe(toggle);
 
     $('[data-tonyapps-alert-widget]').each(function () {
         var widget = $(this);

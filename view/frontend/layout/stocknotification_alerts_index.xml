@@ -5,7 +5,7 @@
     <body>
         <referenceContainer name="content">
             <block class="Tonyapps\StockNotification\Block\Customer\Alerts" name="tonyapps.stocknotification.alerts"
-                   template="Tonyapps_StockNotification::customer/alerts.phtml"/>
+                   template="Tonyapps_StockNotification::customer/alerts.phtml" cacheable="false"/>
         </referenceContainer>
     </body>
 </page>

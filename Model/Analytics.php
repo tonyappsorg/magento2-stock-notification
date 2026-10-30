@@ -5,11 +5,12 @@ namespace Tonyapps\StockNotification\Model;
 
 use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Framework\App\ResourceConnection;
+use Magento\Framework\View\Element\Block\ArgumentInterface;
 
 /**
  * Read-only aggregates over the core alert tables plus the guest table, for the admin dashboard.
  */
-class Analytics
+class Analytics implements ArgumentInterface
 {
     public function __construct(
         private readonly ResourceConnection $resource,

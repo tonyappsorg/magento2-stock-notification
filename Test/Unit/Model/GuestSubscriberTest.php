@@ -72,7 +72,8 @@ class GuestSubscriberTest extends TestCase
         $this->assertSame(19.99, $alert->getPrice());
         $this->assertSame(GuestAlert::STATUS_UNCONFIRMED, $alert->getStatus());
         $this->assertSame('token-abc', $alert->getUnsubscribeToken());
-        $this->assertTrue($alert->isObjectNew(), 'caller sends the confirmation email for new alerts');
+        $this->assertTrue($alert->isObjectNew());
+        $this->assertTrue($alert->getData('confirmation_due'), 'caller sends the confirmation email for new alerts');
     }
 
     public function testRefusesNewSubscriptionOnceTheAddressHasTooManyUnconfirmed(): void
@@ -95,14 +96,37 @@ class GuestSubscriberTest extends TestCase
         $this->assertSame('old', $alert->getUnsubscribeToken());
     }
 
-    public function testResubscribingWhileUnconfirmedStaysUnconfirmedAndSendsNothing(): void
+    public function testResubscribingWhileUnconfirmedWithinAnHourSendsNothing(): void
     {
-        $this->existing = $this->newAlert()->setData(['entity_id' => 7, 'status' => GuestAlert::STATUS_UNCONFIRMED, 'unsubscribe_token' => 'old']);
+        $this->existing = $this->newAlert()->setData([
+            'entity_id' => 7,
+            'status' => GuestAlert::STATUS_UNCONFIRMED,
+            'unsubscribe_token' => 'old',
+            'add_date' => gmdate('Y-m-d H:i:s', time() - 600),
+        ]);
 
         $alert = $this->subscriber->subscribe('shopper@example.com', 42, GuestAlert::TYPE_STOCK, 1, 1);
 
         $this->assertSame(GuestAlert::STATUS_UNCONFIRMED, $alert->getStatus());
         $this->assertFalse($alert->isObjectNew());
+        $this->assertFalse($alert->getData('confirmation_due'));
+    }
+
+    public function testResubscribingWhileUnconfirmedAfterAnHourResendsTheConfirmation(): void
+    {
+        $this->existing = $this->newAlert()->setData([
+            'entity_id' => 7,
+            'status' => GuestAlert::STATUS_UNCONFIRMED,
+            'unsubscribe_token' => 'old',
+            'add_date' => gmdate('Y-m-d H:i:s', time() - 7200),
+        ]);
+
+        $alert = $this->subscriber->subscribe('shopper@example.com', 42, GuestAlert::TYPE_STOCK, 1, 1);
+
+        $this->assertSame(GuestAlert::STATUS_UNCONFIRMED, $alert->getStatus());
+        $this->assertTrue($alert->getData('confirmation_due'));
+        $this->assertSame('old', $alert->getUnsubscribeToken(), 'the resent link is the one already emailed');
+        $this->assertGreaterThan(time() - 60, strtotime($alert->getData('add_date') . ' UTC'), 'throttle restarts');
     }
 
     public function testConfirmArmsAnUnconfirmedAlertOnce(): void

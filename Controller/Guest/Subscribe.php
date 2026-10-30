@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Tonyapps\StockNotification\Controller\Guest;
 
 use Magento\Catalog\Api\ProductRepositoryInterface;
+use Magento\Catalog\Model\Product\Attribute\Source\Status;
 use Magento\Framework\App\Action\HttpPostActionInterface;
 use Magento\Framework\App\RequestInterface;
 use Magento\Framework\Controller\ResultFactory;
@@ -46,6 +47,13 @@ class Subscribe implements HttpPostActionInterface
 
         try {
             $product = $this->productRepository->getById($productId, false, (int) $store->getId());
+            // Only products a shopper could have seen here, so the email can't leak disabled or other sites' names.
+            if ((int) $product->getStatus() !== Status::STATUS_ENABLED
+                || !$product->isVisibleInSiteVisibility()
+                || !in_array((int) $store->getWebsiteId(), array_map('intval', (array) $product->getWebsiteIds()), true)
+            ) {
+                throw new LocalizedException(__('This product is not available.'));
+            }
             // Price is taken server side: the browser does not get to say what a price drop is.
             $price = $alertType === GuestAlert::TYPE_PRICE ? (float) $product->getFinalPrice() : null;
 
@@ -57,7 +65,7 @@ class Subscribe implements HttpPostActionInterface
                 (int) $store->getWebsiteId(),
                 $price
             );
-            if ($alert->isObjectNew()) {
+            if ($alert->getData('confirmation_due')) {
                 $this->sender->sendConfirmation($alert, $product);
             }
         } catch (LocalizedException $e) {

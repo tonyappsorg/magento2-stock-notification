@@ -4,6 +4,7 @@
 
 $analytics = $block->getData('view_model');
 $totals = $analytics->getTotals();
+$topProducts = $analytics->getTopProducts();
 // Pairs, not label => value: __() returns a Phrase object, which can't be an array key.
 $tiles = [
     [__('Customer stock alerts'), $totals['customer_stock']],
@@ -36,7 +37,7 @@ $tiles = [
             </tr>
         </thead>
         <tbody>
-        <?php foreach ($analytics->getTopProducts() as $row) : ?>
+        <?php foreach ($topProducts as $row) : ?>
             <tr>
                 <td><?= $escaper->escapeHtml($row['sku']) ?></td>
                 <td>
@@ -49,7 +50,7 @@ $tiles = [
                 <td><?= (int) $row['alerts_sent'] ?></td>
             </tr>
         <?php endforeach; ?>
-        <?php if (!$block->getTopProducts()) : ?>
+        <?php if (!$topProducts) : ?>
             <tr><td colspan="5"><?= $escaper->escapeHtml(__('No subscriptions yet.')) ?></td></tr>
         <?php endif; ?>
         </tbody>

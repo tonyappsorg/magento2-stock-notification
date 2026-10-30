@@ -36,3 +36,17 @@ bin/magento setup:upgrade
 ```
 vendor/bin/phpunit -c dev/tests/unit/phpunit.xml.dist app/code/Tonyapps/StockNotification/Test/Unit
 ```
+
+## Review fixes (2026-10-30)
+
+- **Admin dashboard renders again**: `Model\Analytics` implements `ArgumentInterface` (required for a layout
+  `view_model`), and the empty-table check uses the view model, not the block.
+- **"My Product Alerts" is not full-page cached** (`cacheable="false"`), so it shows the customer's own alerts.
+- **Logged-in customers get core's alert links on the cached product page.** The page renders both variants and
+  picks one in the browser from the `customer` customer-data section; it stays cacheable.
+- **Guest subscribe only accepts products a shopper could see in that store**: enabled, visible, and assigned to the
+  store's website. The 5-unconfirmed-per-address cap still limits mail to any one address.
+- **Re-subscribing an unconfirmed alert resends the confirmation**, at most once an hour per alert.
+- **Guest alert emails show the price in the store's currency** (`convertAndFormat`).
+- Added `etc/db_schema_whitelist.json` and the `magento/module-inventory-low-quantity-notification` composer
+  requirement.

@@ -6,7 +6,8 @@
     "require": {
         "php": "~8.3.0||~8.4.0",
         "magento/framework": "*",
-        "magento/module-product-alert": "*"
+        "magento/module-product-alert": "*",
+        "magento/module-inventory-low-quantity-notification": "*"
     },
     "version": "1.0.0",
     "autoload": {
