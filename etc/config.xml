@@ -11,6 +11,13 @@
                 <notify_new_subscription>0</notify_new_subscription>
                 <notify_low_stock>1</notify_low_stock>
             </admin>
+            <email>
+                <guest_stock_template>tonyapps_stocknotification_email_guest_stock_template</guest_stock_template>
+                <guest_price_template>tonyapps_stocknotification_email_guest_price_template</guest_price_template>
+                <admin_subscription_template>tonyapps_stocknotification_email_admin_subscription_template</admin_subscription_template>
+                <admin_low_stock_template>tonyapps_stocknotification_email_admin_low_stock_template</admin_low_stock_template>
+                <guest_confirm_template>tonyapps_stocknotification_email_guest_confirm_template</guest_confirm_template>
+            </email>
         </tonyapps_stocknotification>
     </default>
 </config>

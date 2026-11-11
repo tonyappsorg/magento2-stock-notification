@@ -24,11 +24,6 @@ use Tonyapps\StockNotification\Model\ResourceModel\GuestAlert\CollectionFactory;
  */
 class GuestAlertSender
 {
-    private const TEMPLATES = [
-        GuestAlert::TYPE_STOCK => 'tonyapps_stocknotification_guest_stock',
-        GuestAlert::TYPE_PRICE => 'tonyapps_stocknotification_guest_price',
-    ];
-
     public function __construct(
         private readonly CollectionFactory $collectionFactory,
         private readonly GuestAlertResource $alertResource,
@@ -137,7 +132,7 @@ class GuestAlertSender
 
         try {
             $transport = $this->transportBuilder
-                ->setTemplateIdentifier(self::TEMPLATES[$alertType])
+                ->setTemplateIdentifier($this->helper->getEmailTemplate('guest_' . $alertType, $storeId))
                 ->setTemplateOptions(['area' => Area::AREA_FRONTEND, 'store' => $storeId])
                 ->setTemplateVars(['productsHtml' => $rows])
                 ->setFromByScope('general', $storeId)
@@ -168,7 +163,7 @@ class GuestAlertSender
     {
         $storeId = (int) $alert->getStoreId();
         $transport = $this->transportBuilder
-            ->setTemplateIdentifier('tonyapps_stocknotification_guest_confirm')
+            ->setTemplateIdentifier($this->helper->getEmailTemplate('guest_confirm', $storeId))
             ->setTemplateOptions(['area' => Area::AREA_FRONTEND, 'store' => $storeId])
             ->setTemplateVars([
                 'product_name' => (string) $product->getName(),

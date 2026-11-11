@@ -26,7 +26,7 @@ use Tonyapps\StockNotification\Model\ResourceModel\GuestAlert\CollectionFactory;
 
 class GuestAlertSenderTest extends TestCase
 {
-    public function testStockEmailShowsThePriceInTheStoreCurrency(): void
+    public function testStockEmailUsesTheStoresTemplateAndShowsThePriceInTheStoreCurrency(): void
     {
         $alert = $this->getMockBuilder(GuestAlert::class)->disableOriginalConstructor()->onlyMethods([])->getMock();
         $alert->setData([
@@ -54,6 +54,8 @@ class GuestAlertSenderTest extends TestCase
         $alertHelper->method('isStockAlertAllowed')->willReturn(true);
         $helper = $this->createMock(Helper::class);
         $helper->method('isGuestSubscriptionAllowed')->willReturn(true);
+        // The template chosen for the alert's store view, e.g. an Email Designer design.
+        $helper->method('getEmailTemplate')->with('guest_stock', 2)->willReturn('31');
         $store = $this->createMock(Store::class);
         $store->method('getWebsite')->willReturn($this->createMock(Website::class));
         $store->method('getUrl')->willReturn('https://example.test/unsubscribe');
@@ -66,7 +68,8 @@ class GuestAlertSenderTest extends TestCase
 
         $vars = [];
         $transportBuilder = $this->createMock(TransportBuilder::class);
-        foreach (['setTemplateIdentifier', 'setTemplateOptions', 'setFromByScope', 'addTo'] as $method) {
+        $transportBuilder->expects(self::once())->method('setTemplateIdentifier')->with('31')->willReturnSelf();
+        foreach (['setTemplateOptions', 'setFromByScope', 'addTo'] as $method) {
             $transportBuilder->method($method)->willReturnSelf();
         }
         $transportBuilder->method('setTemplateVars')->willReturnCallback(

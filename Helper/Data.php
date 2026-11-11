@@ -15,6 +15,7 @@ class Data extends AbstractHelper
     private const XML_PATH_NOTIFY_SUBSCRIPTION = 'tonyapps_stocknotification/admin/notify_new_subscription';
     private const XML_PATH_NOTIFY_LOW_STOCK = 'tonyapps_stocknotification/admin/notify_low_stock';
     private const XML_PATH_GENERAL_CONTACT = 'trans_email/ident_general/email';
+    private const XML_PATH_EMAIL_TEMPLATE = 'tonyapps_stocknotification/email/%s_template';
 
     public function isEnabled(?int $storeId = null): bool
     {
@@ -48,6 +49,20 @@ class Data extends AbstractHelper
             $email = (string) $this->scopeConfig->getValue(self::XML_PATH_GENERAL_CONTACT, ScopeInterface::SCOPE_STORE);
         }
         return $email !== '' ? $email : null;
+    }
+
+    /**
+     * The template chosen for an email, e.g. an Email Designer design, or the module's default.
+     *
+     * @param string $email guest_stock, guest_price, guest_confirm, admin_subscription or admin_low_stock
+     */
+    public function getEmailTemplate(string $email, ?int $storeId = null): string
+    {
+        return (string) $this->scopeConfig->getValue(
+            sprintf(self::XML_PATH_EMAIL_TEMPLATE, $email),
+            ScopeInterface::SCOPE_STORE,
+            $storeId
+        );
     }
 
     private function flag(string $path, ?int $storeId = null): bool

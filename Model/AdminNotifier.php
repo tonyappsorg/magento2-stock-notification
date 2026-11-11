@@ -31,7 +31,7 @@ class AdminNotifier
         if (!$this->helper->isNewSubscriptionNotificationEnabled()) {
             return;
         }
-        $this->send('tonyapps_stocknotification_admin_subscription', [
+        $this->send('admin_subscription', [
             'subscriber_email' => $subscriberEmail,
             'product_name' => $productName,
             'alert_type' => $alertType,
@@ -61,13 +61,14 @@ class AdminNotifier
             );
         }
 
-        $this->send('tonyapps_stocknotification_admin_low_stock', [
+        $this->send('admin_low_stock', [
             'rowsHtml' => $rowsHtml,
             'rowCount' => count($rows),
         ]);
     }
 
-    private function send(string $templateId, array $vars): void
+    /** @param string $email admin_subscription or admin_low_stock */
+    private function send(string $email, array $vars): void
     {
         $recipient = $this->helper->getAdminRecipient();
         if (!$recipient) {
@@ -75,12 +76,13 @@ class AdminNotifier
         }
 
         try {
+            $storeId = (int) $this->storeManager->getDefaultStoreView()->getId();
             $transport = $this->transportBuilder
-                ->setTemplateIdentifier($templateId)
+                ->setTemplateIdentifier($this->helper->getEmailTemplate($email, $storeId))
                 ->setTemplateOptions([
                     // Frontend: the email header/footer templates only exist there; adminhtml renders an error page instead.
                     'area' => Area::AREA_FRONTEND,
-                    'store' => $this->storeManager->getDefaultStoreView()->getId(),
+                    'store' => $storeId,
                 ])
                 ->setTemplateVars($vars)
                 ->setFromByScope(self::SENDER)

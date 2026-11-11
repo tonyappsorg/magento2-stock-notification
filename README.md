@@ -50,3 +50,13 @@ vendor/bin/phpunit -c dev/tests/unit/phpunit.xml.dist app/code/Tonyapps/StockNot
 - **Guest alert emails show the price in the store's currency** (`convertAndFormat`).
 - Added `etc/db_schema_whitelist.json` and the `magento/module-inventory-low-quantity-notification` composer
   requirement.
+
+## Redesigning the emails
+
+Each email's template is chosen in **Stores › Configuration › Catalog › Out of Stock Notification › Email Templates** (guest emails per store view, admin emails globally). Pick a template made in **Marketing › Email Templates** or a design made
+with the [Email Designer](https://github.com/tonyappsorg/magento2-email-designer) (`Tonyapps_EmailDesigner`) (**Marketing › Communications › Email Designer**). The default template is used until another one
+is picked.
+
+The template IDs follow core's config-path convention so the setting can offer the default: `tonyapps_stocknotification_<email>` are now `tonyapps_stocknotification_email_<email>_template`. Theme overrides
+keep working (they go by file name). A custom template created from the old ID keeps its content, but its *Template
+Information* no longer names the default it was loaded from.
