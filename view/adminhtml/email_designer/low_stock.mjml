@@ -1,0 +1,3 @@
+        <mj-text font-size="24px" font-weight="600">{{trans "%count products are running low" count=$rowCount}}</mj-text>
+        <mj-text>{{trans "%count products are at or below their notify quantity:" count=$rowCount}}</mj-text>
+        <mj-raw ta-block="stocknotification_low_stock"></mj-raw>

@@ -1,0 +1,3 @@
+        <mj-text font-size="24px" font-weight="600">{{trans "New %alert_type alert subscription" alert_type=$alert_type}}</mj-text>
+        <mj-text>{{trans "%who %email subscribed to a %type alert." who=$subscriber_type email=$subscriber_email type=$alert_type}}</mj-text>
+        <mj-text>{{trans "Product: %name" name=$product_name}}</mj-text>

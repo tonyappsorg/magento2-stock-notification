@@ -6,4 +6,33 @@
     <type name="Magento\ProductAlert\Model\Price">
         <plugin name="tonyapps_stocknotification_admin_notify" type="Tonyapps\StockNotification\Plugin\NotifyAdminOnCoreAlert"/>
     </type>
+    <!-- Tonyapps_EmailDesigner: blocks and starter designs for the five emails. Ignored without that module. -->
+    <type name="Tonyapps\EmailDesigner\Model\BlockPool">
+        <arguments>
+            <argument name="blocks" xsi:type="array">
+                <item name="stocknotification_products" xsi:type="array">
+                    <item name="label" xsi:type="string" translate="true">Product list</item>
+                    <item name="templates" xsi:type="array">
+                        <item name="0" xsi:type="string">tonyapps_stocknotification_email_guest_stock_template</item>
+                        <item name="1" xsi:type="string">tonyapps_stocknotification_email_guest_price_template</item>
+                    </item>
+                    <item name="directive" xsi:type="string"><![CDATA[<table width="100%" cellpadding="0" cellspacing="0" role="presentation">{{var productsHtml|raw}}</table>]]></item>
+                </item>
+                <item name="stocknotification_low_stock" xsi:type="array">
+                    <item name="label" xsi:type="string" translate="true">Low stock table</item>
+                    <item name="templates" xsi:type="array">
+                        <item name="0" xsi:type="string">tonyapps_stocknotification_email_admin_low_stock_template</item>
+                    </item>
+                    <item name="directive" xsi:type="string"><![CDATA[<table width="100%" border="0" cellpadding="6" cellspacing="0" role="presentation"><tr><th align="left">SKU</th><th align="left">{{trans "Product"}}</th><th align="right">{{trans "Qty"}}</th><th align="left">{{trans "Source"}}</th></tr>{{var rowsHtml|raw}}</table>]]></item>
+                </item>
+            </argument>
+            <argument name="starters" xsi:type="array">
+                <item name="tonyapps_stocknotification_email_guest_stock_template" xsi:type="string">Tonyapps_StockNotification::view/adminhtml/email_designer/guest_stock_alert.mjml</item>
+                <item name="tonyapps_stocknotification_email_guest_price_template" xsi:type="string">Tonyapps_StockNotification::view/adminhtml/email_designer/guest_price_alert.mjml</item>
+                <item name="tonyapps_stocknotification_email_admin_subscription_template" xsi:type="string">Tonyapps_StockNotification::view/adminhtml/email_designer/new_subscription.mjml</item>
+                <item name="tonyapps_stocknotification_email_admin_low_stock_template" xsi:type="string">Tonyapps_StockNotification::view/adminhtml/email_designer/low_stock.mjml</item>
+                <item name="tonyapps_stocknotification_email_guest_confirm_template" xsi:type="string">Tonyapps_StockNotification::view/adminhtml/email_designer/guest_confirm.mjml</item>
+            </argument>
+        </arguments>
+    </type>
 </config>

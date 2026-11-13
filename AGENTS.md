@@ -25,6 +25,8 @@ Guest alert sending (`Model\GuestAlertSender::send`): purges first, loads all pe
 
 Other files: `Helper\Data` (config reader), `Model\GuestAlert` (+ resource/collection; `TYPE_STOCK`/`TYPE_PRICE`, `STATUS_PENDING` 0 / `STATUS_NOTIFIED` 1 / `STATUS_UNCONFIRMED` 2), `view/frontend/web/css/source/_module.less`.
 
+Email Designer (`etc/di.xml`, ignored without `Tonyapps_EmailDesigner`): blocks `stocknotification_products` (*Product list*, `{{var productsHtml|raw}}`; guest stock and price alerts) and `stocknotification_low_stock` (*Low stock table*, header row + `{{var rowsHtml|raw}}`; low stock digest); a starter per email in `view/adminhtml/email_designer/` (`guest_stock_alert`, `guest_price_alert`, `new_subscription`, `low_stock`, `guest_confirm` `.mjml`).
+
 ### Cron
 
 - `tonyapps_stocknotification_guest_alerts` (`Model\GuestAlertSender::send`) — every 15 min, guest counterpart to core's `product_alert` job. Loads each product once per store per run, and first purges unconfirmed alerts older than 7 days and sent alerts older than 180 days.
@@ -81,6 +83,7 @@ bin/magento setup:upgrade
 
 ## Change history
 
+- **2026-11-13 Email Designer blocks and starter designs**: `etc/di.xml` registers the *Product list* and *Low stock table* blocks and a starter design for each of the five emails (heading from the subject, the existing texts, the confirm link as a button).
 - **2026-11-11 email template settings**: each email's template is chosen in **Stores › Configuration › Catalog › Out of Stock Notification › Email Templates** (guest emails per store view, admin emails globally); a template from **Marketing › Email Templates** or an Email Designer design can be picked. Template IDs follow core's config-path convention so the setting can offer the default: `tonyapps_stocknotification_<email>` are now `tonyapps_stocknotification_email_<email>_template`. Theme overrides keep working (they go by file name). A custom template created from the old ID keeps its content, but its *Template Information* no longer names the default it was loaded from.
 - **2026-11-08 QA**: popup layout fixed; "My Product Alerts" navigation link fixed.
 - **2026-10-30 review fixes**:

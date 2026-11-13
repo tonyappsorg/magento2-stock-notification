@@ -56,7 +56,7 @@ Make sure Magento cron is running.
 
 ### Redesigning the emails
 
-Each email's template is chosen under **Stores › Configuration › Catalog › Out of Stock Notification › Email Templates** (guest emails per store view, admin emails for all stores). Pick a template made in **Marketing › Email Templates** or a design made with the [Email Designer](https://github.com/tonyappsorg/magento2-email-designer) (`Tonyapps_EmailDesigner`) (**Marketing › Communications › Email Designer**). The default template is used until another one is picked.
+Each email's template is chosen under **Stores › Configuration › Catalog › Out of Stock Notification › Email Templates** (guest emails per store view, admin emails for all stores). Pick a template made in **Marketing › Email Templates** or a design made with the [Email Designer](https://github.com/tonyappsorg/magento2-email-designer) (`Tonyapps_EmailDesigner`) (**Marketing › Communications › Email Designer**). The default template is used until another one is picked. A new design starts from a ready-made copy of the email, with its product list or low-stock table as a drag-and-drop block.
 
 ## For developers
 

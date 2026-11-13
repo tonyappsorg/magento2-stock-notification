@@ -1,0 +1,3 @@
+        <mj-text font-size="24px" font-weight="600">{{trans "Price drop alert"}}</mj-text>
+        <mj-text>{{trans "The price dropped on something you are watching:"}}</mj-text>
+        <mj-raw ta-block="stocknotification_products"></mj-raw>

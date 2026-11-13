@@ -1,0 +1,5 @@
+        <mj-text font-size="24px" font-weight="600">{{trans "Confirm your alert for %name" name=$product_name}}</mj-text>
+        <mj-text>{{trans "Someone, hopefully you, asked us to email this address about %name." name=$product_name}}</mj-text>
+        <mj-button background-color="#1979c3" border-radius="3px" font-size="16px" font-weight="600" inner-padding="14px 32px" href="{{var confirm_url}}">{{trans "Confirm the alert"}}</mj-button>
+        <mj-divider border-width="1px" border-color="#e5e5e5"></mj-divider>
+        <mj-text font-size="12px" color="#999999">{{trans "If it wasn't you, ignore this email and you won't hear from us again."}}</mj-text>

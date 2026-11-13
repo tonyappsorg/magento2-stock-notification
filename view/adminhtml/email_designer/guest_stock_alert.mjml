@@ -1,0 +1,3 @@
+        <mj-text font-size="24px" font-weight="600">{{trans "Back in stock"}}</mj-text>
+        <mj-text>{{trans "Good news - what you were waiting for is available again:"}}</mj-text>
+        <mj-raw ta-block="stocknotification_products"></mj-raw>
